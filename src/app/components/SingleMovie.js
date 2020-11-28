@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  Dimensions,
 } from 'react-native';
 import FitImage from 'react-native-fit-image';
 import Card from './Card';
@@ -15,6 +16,8 @@ const SingleMovie = (props) => {
   const redIcon = require('../../res/images/heart_red.png');
   const icon = require('../../res/images/heart.png');
   const [favIcon, setFavIcon] = useState(icon);
+  const dimension = Dimensions.get('window');
+  const rat = dimension.height / dimension.width;
 
   useEffect(() => {
     setFavIcon(props.type == 'fav' ? redIcon : icon);
@@ -30,9 +33,19 @@ const SingleMovie = (props) => {
               : require('../../res/images/popcorn.png')
           }
           style={
-            movie.Poster != 'N/A'
-              ? styles.thumbnailImage
-              : styles.thumbnailImageNA
+            (movie.Poster != 'N/A'
+              ? [
+                  styles.thumbnailImage,
+                  {
+                    height: (5 / 3) * dimension.width * 0.42,
+                    width: dimension.width * 0.42,
+                  },
+                ]
+              : styles.thumbnailImageNA,
+            {
+              height: (5 / 3) * dimension.width * 0.42,
+              width: dimension.width * 0.42,
+            })
           }
           resizeMode={movie.Poster != 'N/A' ? 'cover' : 'contain'}
         />
@@ -47,10 +60,8 @@ const SingleMovie = (props) => {
               if (props.type != 'fav') {
                 if (favIcon != redIcon) {
                   setFavIcon(redIcon);
-                  selectedHandler({movie: movie});
-                } else {
-                  Alert.alert('Already added to wishlist');
                 }
+                selectedHandler({movie: movie});
               } else {
                 if (favIcon == redIcon) {
                   setFavIcon(icon);
@@ -73,21 +84,17 @@ const styles = StyleSheet.create({
   outerComponent: {
     marginVertical: 6,
     marginHorizontal: 4,
-    flex: 1,
+    // flex: 1,
     alignItems: 'flex-start',
   },
   cardExtn: {flex: 1},
   thumbnailImage: {
     // flex: 3,
     // flex: 1,
-    height: 300,
-    width: 180,
     justifyContent: 'center',
     alignItems: 'center',
   },
   thumbnailImageNA: {
-    height: 300,
-    width: 180,
     justifyContent: 'center',
     alignItems: 'center',
     resizeMode: 'contain',
@@ -114,9 +121,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
+    // flexShrink: 1,
   },
   leftContainer: {
     flex: 5,
+    flexShrink: 1,
   },
   rightContainer: {
     flex: 1,

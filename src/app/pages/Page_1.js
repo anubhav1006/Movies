@@ -3,15 +3,14 @@ import {
   View,
   Text,
   ActivityIndicator,
-  FlatList,
   TextInput,
   StyleSheet,
 } from 'react-native';
 import {connect} from 'react-redux';
 import getMoviesUsingString from '../../actionCreators/movies';
-import SingleMovie from '../components/SingleMovie';
 import colors from '../../constants/colors';
 import {addToFavourites} from '../../actionCreators/favourites';
+import MovieList from '../components/MovieList';
 
 class Page_1 extends Component {
   constructor(props) {
@@ -48,42 +47,23 @@ class Page_1 extends Component {
             placeholder="Search Here.."
           />
         </View>
-        <View style={styles.moviesContainer}>
-          {console.log(
+
+        {/* {console.log(
             'bool: ' + isMoviesLoading + ' & ' + JSON.stringify(movies),
-          )}
-          {!isMoviesLoading ? (
-            movies != undefined && movies.length ? (
-              <FlatList
-                contentContainerStyle={{
-                  paddingBottom: 30,
-                }}
-                data={movies}
-                renderItem={({item}) => {
-                  return item != undefined ? (
-                    <SingleMovie
-                      movie={item}
-                      selectedHandler={(payload) =>
-                        addToFavourites(payload)
-                      }></SingleMovie>
-                  ) : null;
-                }}
-                numColumns={2}
-                initialNumToRender={100}
-                keyExtractor={(item) => item.imdbID}
-                showsVerticalScrollIndicator={false}
-              />
-            ) : (
-              <View style={styles.emptyMessgeContaienr}>
-                <Text style={styles.emptyMessge}>
-                  Start typing in search field to show some items
-                </Text>
-              </View>
-            )
+          )} */}
+        {!isMoviesLoading ? (
+          movies != undefined && movies.length ? (
+            <MovieList movies={movies} selectedHandler={addToFavourites} />
           ) : (
-            <ActivityIndicator size="large" color="Yellow" />
-          )}
-        </View>
+            <View style={styles.emptyMessgeContaienr}>
+              <Text style={styles.emptyMessge}>
+                Start typing in search field to show some items
+              </Text>
+            </View>
+          )
+        ) : (
+          <ActivityIndicator size="large" color="Yellow" />
+        )}
       </View>
     );
   }
@@ -105,9 +85,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 10,
   },
-  moviesContainer: {
-    paddingBottom: 20,
-  },
+
   singleItem: {
     // marginHorizontal: 4,
     // height: 150,

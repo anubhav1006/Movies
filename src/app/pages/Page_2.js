@@ -1,17 +1,9 @@
 import React, {Component} from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  TouchableHighlight,
-  Alert,
-} from 'react-native';
-import PropTypes from 'prop-types';
+import {View, Text, StyleSheet} from 'react-native';
 import {connect} from 'react-redux';
 import colors from '../../constants/colors';
 import {removeFromFavourites} from '../../actionCreators/favourites';
-import SingleMovie from '../components/SingleMovie';
+import MovieList from '../components/MovieList';
 
 class Page_2 extends Component {
   constructor(props) {
@@ -33,25 +25,10 @@ class Page_2 extends Component {
         </View>
         <View style={styles.line} />
         {favouriteMovies != undefined && favouriteMovies.length > 0 ? (
-          <FlatList
-            contentContainerStyle={{
-              paddingBottom: 20,
-            }}
-            data={favouriteMovies}
-            renderItem={({item}) => {
-              return item != undefined ? (
-                <SingleMovie
-                  type="fav"
-                  movie={item}
-                  selectedHandler={(payload) =>
-                    removeFromFavourites(payload)
-                  }></SingleMovie>
-              ) : null;
-            }}
-            numColumns={2}
-            initialNumToRender={100}
-            keyExtractor={(item) => item.imdbID}
-            showsVerticalScrollIndicator={false}
+          <MovieList
+            movies={favouriteMovies}
+            selectedHandler={removeFromFavourites}
+            type="fav"
           />
         ) : (
           //   Alert.alert('Please add some items to view watchlist')
